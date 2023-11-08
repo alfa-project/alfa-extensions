@@ -77,12 +77,6 @@ Update ros-petalinux.bb receipe inside folder "/project-spec/meta-user/recipes-i
  ext-dummy \
 ```
 
-Note that the extension source files must be compressed in the source directory of your ros2 worspace. To do so, you can use the following command:
-
-```sh
-zip -r ext_dummy.zip ext_dummy
-```
-
 Then go to your project folder and rerun the following command to update the image:
 
 ```sh
