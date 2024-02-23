@@ -2,23 +2,6 @@
 
  This repository provides ready-to-use extensions already tested with ALFA. They can be used as a starting point for developing new ones or for testing the different ALFA setups.
 
-## Table of Contents
-
-- [ALFA Extensions](#alfa-extensions)
-  - [Table of Contents](#table-of-contents)
-  - [Available extensions](#available-extensions)
-  - [Compile ALFA extensions](#compile-alfa-extensions)
-    - [Desktop Software extensions](#desktop-software-extensions)
-    - [Embedded Software extensions](#embedded-software-extensions)
-    - [Embedded Hardware extensions](#embedded-hardware-extensions)
-      - [Create a ALFA project, add the extension and generate the bitstream](#create-a-alfa-project-add-the-extension-and-generate-the-bitstream)
-      - [Enable ALFA hardware extensions in the ALFA-Node](#enable-alfa-hardware-extensions-in-the-alfa-node)
-      - [Package and create new ALFA hardware extensions](#package-and-create-new-alfa-hardware-extensions)
-  - [Run ALFA extensions](#run-alfa-extensions)
-    - [ALFA-Monitor](#alfa-monitor)
-    - [RVIZ](#rviz)
-    - [Node Topics and Services](#node-topics-and-services)
-
 ## Available extensions
 
 - **Dummy** [[Software]](https://github.com/alfa-project/alfa-extensions/tree/main/sw/ext_dummy) [[Hardware]](https://github.com/alfa-project/alfa-extensions/tree/main/hw/ext_dummy) - This extension is used to demonstrate how ALFA extensions are built and used. It simply subscribes a /Pointcloud2 topic and outputs the same pointcloud into /dummy_pointcloud topic.
@@ -26,171 +9,15 @@
 
 <!-- a normal html comment  - **DIOR** [[Software]](https://github.com/alfa-project/alfa-extensions/tree/main/sw/ext_dior) [[Hardware]](https://github.com/alfa-project/alfa-extensions/tree/main/hw/ext_dior) - **TODO Write a brief description of this extension**.
 -->
-
-## Compile ALFA extensions
-
-ALFA software extensions are pieces of software writting in C/C++ with ROS and ALFA-node dependencies. Therefore, to compile them CMAKE is used. Despite sharing the same source file, compiling ALFA extension for desktop and embedded use different tools and flow. In the following steps, we will show you how to package ALFA extensions for both enviroments, using as test case our basic dummy extension.
-
-### Desktop Software extensions
-
-To compile and run the dummy extension build the packages with colcon inside the ros2 workspace (make sure that packages alfa_node, alfa_msg and ext_dummy are inside your src folder):
-
-```sh
-cd ~/ros2_ws 
-colcon build 
-```
-
-The following output should appear:
-
-```sh
-Starting >>> alfa_msg
-Finished <<< alfa_msg [0.52s]                     
-Starting >>> alfa_node
-Finished <<< alfa_node [0.18s]                
-Starting >>> ext_dummy   
-Finished <<< ext_dummy [0.16s]                     
-
-Summary: 3 packages finished [1.02s]
-```
-Source the workspace environment to run the dummy node:
-
-```sh
-source ./install/setup.bash 
-```
-
-Jump to [Run ALFA extensions](#run-alfa-extensions) to see how to run the dummy node.
-
-### Embedded Software extensions
-
-To include the extensions in the embedded image, a recipe file must be created for each extension. You can see the already existing recipes (.bb files) in the meta-alfa/recipes-alfa/alfa-extensions folder. In this case, we already provide a recipe file for the dummy extension that can be used as starting point for your new extensions.
-
-Update ros-petalinux.bb receipe inside folder "/project-spec/meta-user/recipes-image/images" with the desired alfa extensions under 'IMAGE_INSTALL:append':
-
-```sh
- ext-dummy \
-```
-
-Then go to your project folder and rerun the following command to update the image:
-
-```sh
-petalinux-build -c ros-petalinux
-```
-
-Create the SD Card image with the wic command:
-
-```sh
-petalinux-package --wic
-```
-
-And finally, copy the image to the SD Card (check the SD Card device name before running the command):
-
-```sh
-sudo dd if=images/linux/petalinux-sdimage.wic of=/dev/sda conv=fsync bs=8M
-```
-
-Jump to [Run ALFA extensions](#run-alfa-extensions) to see how to run the dummy node.
-
-### Embedded Hardware extensions
-
-Hardware extensions are pieces of hardware that can be deployed alongside the ALFA-Node (they require the ALFA-Node to be fully functional) to do the most process intensive tasks. They are implemented in VHDL and can be compiled using Xilinx's Vivado. Therefore, the first step is to include the hardware (bitstream) into the image and then integrate it with the ALFA-Node.
-
-#### Create a ALFA project, add the extension and generate the bitstream
-
-ALFA projects can be created using the an TCL script that setups all components and the required configurations. To run this script, go to main folder of the alfa-unit repository, make the script *setup_vivado_project* executable if is not already and run it with the name of the project that you want as argument:
-
-```sh
-cd PATH_TO_ALFA_FRAMEWORK/alfa-unit
-chmod +x setup_vivado_project
-./setup_vivado_project <project_name>
-```
-
-The script will open the Vivado GUI and create a new project with the name provided as argument (the project will be created in the folder *PATH_TO_ALFA_FRAMEWORK/alfa-unit/projects/<project_name>*). Then, it will add the ALFA unit and ZCU104 SoC to the design.
-
-Add the extension to the block design and connect all the remaining unconnected interfaces. Note that only the native extensions will appear automatically in the IP catalog. Your extensions IP must be included in this project IP catalog to make them available in block design.
-
-Please adjust the number of Debug Points and User Define interfaces required for your extension. Finally, create a wrapper for the design and proceed to generate the bitstream.
-
-#### Enable ALFA hardware extensions in the ALFA-Node
-
-The ALFA-Node has the capability to run hardware extensions when the extensions are compiled with EXT_HARDWARE compilation flag defined. This flag is defined in the CMakeLists.txt of the extensions and can be toggle on and off by commenting the line with a "#". Nonentheless, developers must defined the extension behaviour when this flag is defined. Check the dummy extension src files for an example of how to do this.
-
-Update, if not already, the ros-petalinux.bb receipe inside folder "/project-spec/meta-user/recipes-image/images" with the desired alfa extensions under 'IMAGE_INSTALL:append':
-
-```sh
- ext-dummy \
-```
-
-Then go to your project folder and rerun the following command to update the image:
-
-```sh
-petalinux-build -c ros-petalinux
-```
-
-Add the generated bitstream into the final image with the command:
-
-```sh
-petalinux-package --boot --fpga <PATH_TO_YOUR_BITSTREAM>/<BITSTREAM_FILE_NAME>.bit --u-boot --force
-```
-
-Create the SD Card image with the wic command:
-
-```sh
-petalinux-package --wic
-```
-
-And finally, copy the image to the SD Card (check the SD Card device name before running the command):
-
-```sh
-sudo dd if=images/linux/petalinux-sdimage.wic of=/dev/sda conv=fsync bs=8M
-```
-
-#### Package and create new ALFA hardware extensions
-
-In order to create and maintain the best environment for your extensions, we advise the usage of the package IP tool provided by Vivado. In the following steps , we will show you how to package ALFA hardware extensions, using dummy extension as an example. Note that these following steps are only to expose the package process of new extensions. After that, you can test them the same way as described above. Inside Xilinx's Vivado, with a project already created for your board and with the extension source files already in your computer:
-
-1. Go to the **Tools** menu and select the **Create and Package New IP...**
-
-    ![createip](docs/figures/tools_createip.png)
-
-2. After pressing **Next** in the first menu, select the option "Package a specified directory" in the Package Options section. Then pres **Next**.
-
-3. Select the dummy extension directory (directory containing all the hardware files -> PATH_TO_ALFA_FRAMEWORK/alfa-extensions/hw/ext_dummy/) and press **Next**.
-
-4. Then, change the *Project name* field to "dummy_extension" and let the Project location be the default path for your Vivado projects.
-
-5. Finishing the process by clicking *Finish*. A new Vivado window will pop-up with your dummy extension package on it.
-
-6. In order to take full advantage of Vivado Block Design features, we need to identify the ALFA interfaces present in the dummy. Select the menu *Port and Interfaces* of the Package IP and select the menu *Auto infer interface*:
-
-    ![auto infer](docs/figures/auto_infer.png)
-
-7. Select User&rarr;Cartesian_representation_rtl and press *OK*. (**Note**: if none of ALFA interfaces are shown in the menu, the ALFA interfaces are not present in the IP catalog. For more information, check the [ALFA-Unit Integration section](https://github.com/alfa-project/alfa-unit#integration))
-
-    ![cartesian](docs/figures/cartesian_represent.png)
-
-8. Repeat the process for the User&rarr;Extension_Interface_rtl.
-
-9. The *Ports and interfaces* menu should look like this:
-
-    ![ports](docs/figures/ports_inter.png)
-
-10. Associate the clock signal for both interfaces by right clicking on top of them and selecting associate clock. Then select the *i_SYSTEM_clk* checkbox and press *OK*.
-  
-    ![associate clock](docs/figures/associate_clock.png)  
-
-11. Select the *Review and Package* submenu and press the *Package IP* button to finalize the process of packaging the ALFA extension:
-
-    ![package](docs/figures/package_ip.png)
-
 ## Run ALFA extensions
 
-To run the dummy node execute the following command. By default the subscriber topic is /velodine_points, but you can specify a different one when starting the node:
+To run ALFA extensions, execute the *ros2 run* command followed by the package name and extension name. For instance, to run the ext-dummy extension run (by default the subscriber topic is /velodine_points, but you can specify a different one when starting the node):
 
 ```sh
 ros2 run ext_dummy ext_dummy /<topic-name>
 ```
 
-The following output should appear for a software only extension:
+The following output should appear for a software extension:
 
 ```sh
 --------------------------------------------------------
@@ -223,7 +50,7 @@ ALFA supports the following two methods to play bags and visualize data.
 
 ### ALFA-Monitor
 
-Open a new terminal and go to your ROS2 workspace. Source the enviroment again:
+In your desktop, open a new terminal and go to your ROS2 workspace. Source the environment again:
 
 ```sh
 source ./install/setup.bash 
@@ -287,7 +114,7 @@ Will outut:
 /ext_dummy_pointcloud
 ```
 
-Echo the topics to output what their are posting:
+Echo the topics to output what their echo is outputting. E.g.:
 
 ```sh
 ros2 topic echo /ext_dummy_alive 
