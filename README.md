@@ -17,7 +17,7 @@ ALFA was tested with the following datasets:
 
 **Note:** The datasets are not in the ROS2 bag format, so you have to convert them first. Instructions here: <https://github.com/tomas789/kitti2bag> or <https://github.com/amslabtech/semantickitti2bag> for Semantic KITTI dataset. However this converts only for the ROS1 format. You have to convert it again for ROS2. Hit us up if you need ready to use ROS2 bags of those datasets.
 
-For testing the Sequence 0 from the SemanticKITTI you can download the bag from here:
+For quick testing the ALFA framework with the Sequence 0 from the SemanticKITTI dataset you can use a small ros2bag available inside the [ALFA-Monitor](https://github.com/alfa-project/alfa-monitor) repository, or you can download the full bag from here:
 https://drive.google.com/file/d/1OZQD10dJnyoZhAmgj--DWqrwAuQeNiHU/view?usp=sharing
 
 ## Run ALFA extensions
@@ -53,7 +53,7 @@ To check available Extension services:
 ros2 service list
 ```
 
-Some Extensions provide parameters change:
+Some Extensions provide parameters change (available in the /<extension_name>_alive topic):
 ```sh
 ros2 param set /<extension_name> <parameter> <new_value>
 ```

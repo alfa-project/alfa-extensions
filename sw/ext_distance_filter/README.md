@@ -31,7 +31,7 @@ Outut:
 /ext_distance_filter_pointcloud
 ```
 
-Dummy Extension metrics:
+Distance Filter Extension metrics:
 ```sh
 ros2 topic echo /ext_distance_filter_metrics 
 ```
@@ -51,7 +51,7 @@ metrics:
 ---
 ```
 
-Dummy Extension services:
+Distance Filter Extension services:
 ```sh
 ros2 service list
 ```
@@ -63,6 +63,26 @@ Output:
 /ext_distance_filter/list_parameters
 /ext_distance_filter/set_parameters
 /ext_distance_filter/set_parameters_atomically
+```
+
+Distance Filter Extension parameters:
+```sh
+ros2 topic echo /ext_distance_filter_alive
+```
+Output:
+```sh
+---
+node_name: ext_distance_filter
+node_type: extension
+config_service_name: ext_distance_filter_settings
+current_status: 0
+config_tag: Configuration
+default_configurations:
+- config_name: min_distance
+  config: 5.0
+- config_name: max_distance
+  config: 20.0
+---
 ```
 
 The ext_distance_filter accepts changing the **min_distance** and **max_distance** parameters. To change the min distance to 1.0, type:
