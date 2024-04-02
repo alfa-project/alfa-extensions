@@ -24,7 +24,7 @@ Check Extension topics:
 ros2 topic list
 ```
 
-Outut:
+Output:
 ```sh
 /ext_distance_filter_alive
 /ext_distance_filter_metrics
@@ -94,3 +94,7 @@ ros2 param set /ext_distance_filter max_distance 10.0
 ```
 
 Change these parameters to see the output changing in the ALFA Monitor or RViz tool.
+
+<p align="center">
+<img src="../../docs/Images/distance_filter.png" alt="distance-filter" width="840" />
+</p>

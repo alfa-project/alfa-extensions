@@ -25,7 +25,7 @@ Check Extension topics:
 ros2 topic list
 ```
 
-Outut:
+Output:
 ```sh
 /ext_dummy_alive
 /ext_dummy_metrics
