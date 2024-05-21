@@ -41,6 +41,39 @@ No Extension metrics are available
 Note: To avoid extra processing overheads, this extension outputs its metrics after processing all the point cloud sequence by pressing CTRL+C.
 ```
 
+Built-in metrics output:
+```sh 
+------ METRICS -------
+Number of frames: 4541
+----------------------
+TP: 47118 +/- 10936
+FP: 4691 +/- 1521
+TN: 66294 +/- 9762
+FN: 1245 +/- 1137
+----------------------
+True Positive Rate: 97.41 +/- 2.166 %
+True Negative Rate: 93.37 +/- 1.924 %
+Positive Predictive Value: 90.44 +/- 3.963 %
+Negative Predictive Value: 98.12 +/- 1.856 %
+F1-Score: 93.74 +/- 2.411 %
+Accuracy: 95.02 +/- 1.42 %
+IoUg: 88.31 +/- 4.153 %
+----------------------
+Total points [In]: 121494 +/- 4100
+Total points [Out]: 121494 +/- 4100
+Removed points: 51810 +/- 10487
+----------------------
+Points outside of grid: 0 +/- 0
+Removed points (Handler): 52132 +/- 10490
+----------------------
+Handler Time: 8.993 +/- 2.685 ms
+Full Processing Time: 13.7 +/- 2.829 ms
+-----------------------
+Points outside of grid: 0
+Removed points: 52132
+----------------------
+```
+
 Dummy Extension services and parameters:
 ```sh
 No Services or parameters re available
