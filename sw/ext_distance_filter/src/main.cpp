@@ -41,8 +41,11 @@ void handler(AlfaNode *node) {
   // Simple example code aplying a distance filter to the pointcloud
   // Get PCL pointcloud
   AlfaPoint point;
+
+  //
   float min_distance = node->get_extension_parameter("min_distance");
   float max_distance = node->get_extension_parameter("max_distance");
+  float number_outside_points = 0;
 
   while (node->get_point_input_pointcloud(point)) {
     // Calculate distance to point
@@ -50,8 +53,11 @@ void handler(AlfaNode *node) {
     // If distance falls between the set parameters, add to output pointcloud
     if (distance > min_distance && distance < max_distance) {
       node->push_point_output_pointcloud(point);
-    }
+    } else
+      number_outside_points++;
   }
+
+  node->set_debug_point(0, number_outside_points);
 #endif
 }
 
