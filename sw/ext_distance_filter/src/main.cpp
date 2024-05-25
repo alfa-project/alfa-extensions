@@ -57,7 +57,8 @@ void handler(AlfaNode *node) {
       number_outside_points++;
   }
 
-  node->set_debug_point(0, number_outside_points);
+  node->set_debug_point(0, number_outside_points,
+                        "Number of points outside the distance range");
 #endif
 }
 
