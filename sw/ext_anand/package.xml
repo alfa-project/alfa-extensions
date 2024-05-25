@@ -4,8 +4,8 @@
   <name>ext_anand</name>
   <version>0.0.0</version>
   <description>ALFA Anand Extension</description>
-  <maintainer email="luis@todo.todo">luis</maintainer>
-  <license>MIT</license>
+  <maintainer email="alfa@alfa.org">Ricardo</maintainer>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>
@@ -15,6 +15,7 @@
   <depend>alfa_msg</depend>
   <depend>pcl_conversions</depend>
   <depend>pcl_msgs</depend>
+  <depend>alib_metrics</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

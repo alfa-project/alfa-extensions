@@ -19,6 +19,7 @@ find_package(rclcpp REQUIRED)
 
 find_package(alfa_node REQUIRED)
 find_package(alfa_msg REQUIRED)
+find_package(alib_metrics REQUIRED)
 
 find_package(sensor_msgs REQUIRED)
 find_package(PCL 1.8 REQUIRED)
@@ -26,7 +27,7 @@ find_package(pcl_conversions REQUIRED)
 
 add_executable(ext_anand src/main.cpp)
 target_link_libraries(ext_anand ${PCL_LIBRARIES})
-ament_target_dependencies(ext_anand rclcpp alfa_node sensor_msgs alfa_msg pcl_conversions)
+ament_target_dependencies(ext_anand rclcpp alfa_node sensor_msgs alfa_msg alib_metrics pcl_conversions)
 
 install(TARGETS
 ext_anand
